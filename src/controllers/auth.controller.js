@@ -1,5 +1,6 @@
 import bcrypt from "bcrypt";
 import User from "../models/User.model.js"
+import { generateToken } from "../utils/jwt.js";
 
 export const signup = async (req , res) =>{
     const { email , password  , phone } = req.body
@@ -89,8 +90,20 @@ export const Login = async (req , res) =>{
             });
         };
 
+        const token = generateToken({
+            id: user.id,
+            email: user.email,
+            phone : user.phone
+        });
+
         res.status(200).json({
-            message:"Login successfull !"
+            message:"Login successfull !",
+            token,
+            user:{
+                 id: user.id,
+                 email: user.email,
+                 phone : user.phone
+            },
         });
 
     } catch (error) {
