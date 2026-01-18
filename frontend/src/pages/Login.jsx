@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const Login = ({ onLoginSuccess }) => {
+const Login = ({ onLoginSuccess, onSwitchToSignup }) => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -92,6 +92,15 @@ const Login = ({ onLoginSuccess }) => {
         >
           {loading ? "Logging in..." : "Login"}
         </button>
+        <p className="text-sm text-center mt-4">
+          Don’t have an account?{" "}
+          <span
+            onClick={onSwitchToSignup}
+            className="text-blue-600 cursor-pointer hover:underline"
+          >
+            Signup
+          </span>
+        </p>
       </form>
     </div>
   );

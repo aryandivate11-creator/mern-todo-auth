@@ -30,7 +30,7 @@ export const getTodos = async (req,res) =>{
 
         const todos = await Todo.find(query)
         .skip(skip)
-        .limit(limit);
+        .limit(limit); 
 
         const totalTodos = await Todo.countDocuments(query);
 

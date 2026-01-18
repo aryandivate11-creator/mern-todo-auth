@@ -87,14 +87,25 @@ const Signup = ({ onSwitchToLogin }) => {
           </button>
         </div>
 
-        <input
-          name="confirmPassword"
-          type={showPassword ? "text" : "password"}
-          placeholder="Confirm Password"
-          className="w-full border p-2 mb-4 rounded"
-          onChange={handleChange}
-          required
-        />
+        <div className="relative mb-4">
+            <input
+              name="confirmPassword"
+              type={showPassword ? "text" : "password"}
+              placeholder="Confirm Password"
+              className="w-full border p-2 rounded"
+              onChange={handleChange}
+              required
+            />
+
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-2 text-sm text-blue-600"
+            >
+              {showPassword ? "Hide" : "Show"}
+            </button>
+        </div>
+
 
         <button className="w-full bg-blue-600 text-white py-2 rounded">
           Signup
@@ -104,7 +115,7 @@ const Signup = ({ onSwitchToLogin }) => {
           Already have an account?{" "}
           <span
             onClick={onSwitchToLogin}
-            className="text-blue-600 cursor-pointer"
+            className="text-blue-600 cursor-pointer hover:underline"
           >
             Login
           </span>

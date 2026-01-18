@@ -30,7 +30,7 @@ const Todos = () => {
     const data = await res.json();
     console.log("API Response:", data);
     setTodos(data.todos || []);
-    setTotalPages(data.totalPages || 1);
+    setTotalPages(data.totalpages || 1);
   };
 
   useEffect(() => {
@@ -98,6 +98,7 @@ const Todos = () => {
   };
 
    console.log("Current page:", page);
+   console.log("Total Pages:", totalPages);
   return (
     <div className="min-h-screen bg-gray-100">
       {/* Header */}
@@ -233,8 +234,10 @@ const Todos = () => {
 
         <div className="flex justify-between items-center mt-6">
   <button
-    type="button"
-    onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+    onClick={() => {
+      console.log("Previous clicked");
+      setPage(page - 1);
+    }}
     disabled={page === 1}
     className="px-4 py-2 bg-gray-300 rounded disabled:opacity-50"
   >
@@ -246,14 +249,17 @@ const Todos = () => {
   </span>
 
   <button
-    type="button"
-    onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
-    disabled={page === totalPages}
-    className="px-4 py-2 bg-gray-300 rounded disabled:opacity-50"
+    onClick={() => {
+      console.log("Next clicked");
+      setPage(page + 1);
+    }}
+    disabled={page===totalPages}
+    className="px-4 py-2 bg-gray-300 rounded"
   >
     Next
   </button>
 </div>
+
 
       </main>
     </div>
