@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { GoogleLogin } from "@react-oauth/google";
 
 const Signup = ({ onSwitchToLogin }) => {
   const [form, setForm] = useState({
@@ -142,6 +143,39 @@ const Signup = ({ onSwitchToLogin }) => {
         <button className="w-full bg-blue-600 text-white py-2 rounded">
           Signup
         </button>
+         
+         <div className="mt-4 flex justify-center">
+          <GoogleLogin
+            onSuccess={async (response) => {
+              try {
+                const res = await fetch("http://localhost:3000/api/auth/google", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({
+                    token: response.credential,
+                  }),
+                });
+
+                const data = await res.json();
+
+                if (!res.ok) {
+                  console.log("Google signup failed");
+                  return;
+                }
+
+                localStorage.setItem("token", data.token);
+                window.location.reload(); // or redirect to todos
+              } catch (error) {
+                console.error("Google signup error:", error);
+              }
+            }}
+            onError={() => {
+              console.log("Google Signup Failed");
+            }}
+          />
+        </div>
 
         <p className="text-sm text-center mt-4">
           Already have an account?{" "}
