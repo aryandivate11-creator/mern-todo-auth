@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { apiFetch } from "../utils/api";
 
 const Todos = () => {
   const [todos, setTodos] = useState([]);
@@ -14,19 +15,12 @@ const Todos = () => {
 
   const [totalPages, setTotalPages] = useState(1);
 
-  const token = localStorage.getItem("token");
-
   // Fetch Todos with Search + Pagination
   const fetchTodos = async () => {
   setLoading(true);
 
-  const res = await fetch(
-    `http://localhost:3000/api/todos?page=${page}&limit=5&search=${search}`,
-    {
-      headers: {
-        Authorization: "Bearer " + token,
-      },
-    }
+  const res = await apiFetch(
+    `http://localhost:3000/api/todos?page=${page}&limit=5&search=${search}`
   );
 
   const data = await res.json();
@@ -46,12 +40,8 @@ const Todos = () => {
     e.preventDefault();
     if (!newTitle.trim()) return;
 
-    await fetch("http://localhost:3000/api/todos", {
+    await apiFetch("http://localhost:3000/api/todos", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + token,
-      },
       body: JSON.stringify({ title: newTitle }),
     });
 
@@ -61,12 +51,8 @@ const Todos = () => {
 
   // Save Edited Todo
   const saveEdit = async (id) => {
-    await fetch(`http://localhost:3000/api/todos/${id}`, {
+    await apiFetch(`http://localhost:3000/api/todos/${id}`, {
       method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + token,
-      },
       body: JSON.stringify({ title: editText }),
     });
 
@@ -77,12 +63,8 @@ const Todos = () => {
 
   // Toggle Status
   const toggleStatus = async (todo) => {
-    await fetch(`http://localhost:3000/api/todos/${todo._id}`, {
+    await apiFetch(`http://localhost:3000/api/todos/${todo._id}`, {
       method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + token,
-      },
       body: JSON.stringify({ completed: !todo.completed }),
     });
 
@@ -91,15 +73,25 @@ const Todos = () => {
 
   // Delete Todo
   const deleteTodo = async (id) => {
-    await fetch(`http://localhost:3000/api/todos/${id}`, {
-      method: "DELETE",
-      headers: {
-        Authorization: "Bearer " + token,
-      },
+    await apiFetch(`http://localhost:3000/api/todos/${id}`, {
+      method: "DELETE"
     });
 
     fetchTodos();
   };
+
+  const handleLogout = async () => {
+  const refreshToken = localStorage.getItem("refreshToken");
+
+  await apiFetch("http://localhost:3000/api/auth/logout", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ refreshToken }),
+  });
+
+  localStorage.clear();
+  window.location.reload();
+};
 
    console.log("Current page:", page);
    console.log("Total Pages:", totalPages);
@@ -109,10 +101,7 @@ const Todos = () => {
       <header className="bg-white shadow p-4 flex justify-between items-center">
         <h1 className="text-xl font-bold text-blue-600">My Todos</h1>
         <button
-          onClick={() => {
-            localStorage.removeItem("token");
-            window.location.reload();
-          }}
+          onClick={handleLogout}
           className="text-sm bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
         >
           Logout

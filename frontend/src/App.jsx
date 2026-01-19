@@ -10,7 +10,7 @@ function App() {
   if (isLoggedIn) return <Todos />;
 
   return showSignup ? (
-    <Signup onSwitchToLogin={() => setShowSignup(false)} />
+    <Signup onSwitchToLogin={() => setShowSignup(false)}  onLoginSuccess={() => setIsLoggedIn(true)} />
   ) : (
     <Login
       onLoginSuccess={() => setIsLoggedIn(true)}

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { GoogleLogin } from "@react-oauth/google";
+import { apiFetch } from "../utils/api";
 
 const Login = ({ onLoginSuccess, onSwitchToSignup }) => {
 
@@ -16,7 +17,7 @@ const Login = ({ onLoginSuccess, onSwitchToSignup }) => {
     setError("");
 
     try {
-      const res = await fetch("http://localhost:3000/api/auth/login", {
+      const res = await apiFetch("http://localhost:3000/api/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -32,7 +33,9 @@ const Login = ({ onLoginSuccess, onSwitchToSignup }) => {
         return;
       }
 
-      localStorage.setItem("token", data.token);
+      localStorage.setItem("accessToken", data.accessToken);
+      localStorage.setItem("refreshToken", data.refreshToken);
+
       onLoginSuccess();
     } catch (err) {
       setError("Server error. Try again.");
@@ -98,7 +101,7 @@ const Login = ({ onLoginSuccess, onSwitchToSignup }) => {
           <GoogleLogin
             onSuccess={async (response) => {
               try {
-                const res = await fetch("http://localhost:3000/api/auth/google", {
+                const res = await apiFetch("http://localhost:3000/api/auth/google", {
                   method: "POST",
                   headers: {
                     "Content-Type": "application/json",
@@ -115,7 +118,9 @@ const Login = ({ onLoginSuccess, onSwitchToSignup }) => {
                   return;
                 }
 
-                localStorage.setItem("token", data.token);
+                localStorage.setItem("accessToken", data.accessToken);
+                localStorage.setItem("refreshToken", data.refreshToken);
+
                 onLoginSuccess();
               } catch (error) {
                 console.error("Google login error:", error);

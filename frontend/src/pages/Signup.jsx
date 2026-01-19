@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { GoogleLogin } from "@react-oauth/google";
+import { apiFetch } from "../utils/api";
 
-const Signup = ({ onSwitchToLogin }) => {
+const Signup = ({ onSwitchToLogin , onLoginSuccess}) => {
   const [form, setForm] = useState({
     email: "",
     phone: "",
@@ -52,7 +53,7 @@ const Signup = ({ onSwitchToLogin }) => {
     }
 
     try {
-      const res = await fetch("http://localhost:3000/api/auth/signup", {
+      const res = await apiFetch("http://localhost:3000/api/auth/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
@@ -148,7 +149,7 @@ const Signup = ({ onSwitchToLogin }) => {
           <GoogleLogin
             onSuccess={async (response) => {
               try {
-                const res = await fetch("http://localhost:3000/api/auth/google", {
+                const res = await apiFetch("http://localhost:3000/api/auth/google", {
                   method: "POST",
                   headers: {
                     "Content-Type": "application/json",
@@ -165,8 +166,10 @@ const Signup = ({ onSwitchToLogin }) => {
                   return;
                 }
 
-                localStorage.setItem("token", data.token);
-                window.location.reload(); // or redirect to todos
+                localStorage.setItem("accessToken", data.accessToken);
+                localStorage.setItem("refreshToken", data.refreshToken);
+
+                onLoginSuccess();
               } catch (error) {
                 console.error("Google signup error:", error);
               }

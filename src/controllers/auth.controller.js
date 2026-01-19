@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt";
 import User from "../models/User.model.js"
-import { generateToken } from "../utils/jwt.js";
+import { generateRefreshToken , generateAccessToken} from "../utils/jwt.js";
 import { OAuth2Client } from "google-auth-library";
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
@@ -26,12 +26,23 @@ export const googleLogin = async (req, res) => {
       });
     }
 
-    const jwtToken = generateToken({
-      id: user._id,
-      email: user.email,
+   const accessToken = generateAccessToken({
+        id: user._id,
+        email: user.email,
     });
 
-    res.status(200).json({ token: jwtToken });
+    const refreshToken = generateRefreshToken({
+        id: user._id,
+         email: user.email,
+     });
+
+        user.refreshToken = refreshToken;
+        await user.save();
+
+    res.status(200).json({ 
+        accessToken,
+        refreshToken
+    });
 
   } catch (error) {
     console.error(error);
@@ -127,15 +138,24 @@ export const Login = async (req , res) =>{
             });
         };
 
-        const token = generateToken({
-            id: user.id,
+        const accessToken = generateAccessToken({
+            id: user._id,
             email: user.email,
-            phone : user.phone
-        });
+            });
+
+            const refreshToken = generateRefreshToken({
+            id: user._id,
+            email: user.email,
+            });
+
+           user.refreshToken = refreshToken;
+           await user.save();
+
 
         res.status(200).json({
             message:"Login successfull !",
-            token,
+            accessToken,
+            refreshToken,
             user:{
                  id: user.id,
                  email: user.email,
@@ -149,4 +169,61 @@ export const Login = async (req , res) =>{
             error:"Internal Server error"
         });
     };
+};
+
+export const refreshTokenController = async (req, res) => {
+  try {
+    const { refreshToken } = req.body;
+
+    if (!refreshToken) {
+      return res.status(401).json({ message: "No refresh token provided" });
+    }
+
+    const user = await User.findOne({ refreshToken });
+
+    if (!user) {
+      return res.status(403).json({ message: "Invalid refresh token" });
+    }
+
+    jwt.verify(
+      refreshToken,
+      process.env.JWT_REFRESH_SECRET,
+      (err, decoded) => {
+        if (err) {
+          return res.status(403).json({ message: "Refresh token expired" });
+        }
+
+        const newAccessToken = generateAccessToken({
+          id: user._id,
+          email: user.email,
+        });
+
+        res.status(200).json({ accessToken: newAccessToken });
+      }
+    );
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+export const logout = async (req, res) => {
+  try {
+    const { refreshToken } = req.body;
+
+    if (!refreshToken) {
+      return res.status(400).json({ message: "No refresh token provided" });
+    }
+
+    await User.findOneAndUpdate(
+      { refreshToken },
+      { refreshToken: null }
+    );
+
+    res.status(200).json({ message: "Logged out successfully" });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Logout failed" });
+  }
 };

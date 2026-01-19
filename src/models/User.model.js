@@ -18,11 +18,16 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    
+
     name: {
       type: String,
       required: false,
     },
+
+    refreshToken: {
+     type: String,
+    },
+
   },
   {
     timestamps: true,
