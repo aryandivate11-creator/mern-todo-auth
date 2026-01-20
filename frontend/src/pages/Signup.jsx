@@ -53,10 +53,15 @@ const Signup = ({ onSwitchToLogin , onLoginSuccess}) => {
     }
 
     try {
+      const captchaToken = await window.grecaptcha.execute(
+      import.meta.env.VITE_RECAPTCHA_SITE_KEY,
+      { action: "signup" }
+    );
+
       const res = await apiFetch("http://localhost:3000/api/auth/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify(...form, captchaToken,),
       });
 
       const data = await res.json();

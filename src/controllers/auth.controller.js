@@ -2,8 +2,24 @@ import bcrypt from "bcrypt";
 import User from "../models/User.model.js"
 import { generateRefreshToken , generateAccessToken} from "../utils/jwt.js";
 import { OAuth2Client } from "google-auth-library";
+import axios from "axios";
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
+const verifyCaptcha = async (token) => {
+  const res = await axios.post(
+    "https://www.google.com/recaptcha/api/siteverify",
+    null,
+    {
+      params: {
+        secret: process.env.RECAPTCHA_SECRET,
+        response: token,
+      },
+    }
+  );
+
+  return res.data.success;
+};
 
 export const googleLogin = async (req, res) => {
   try {
@@ -120,6 +136,13 @@ export const Login = async (req , res) =>{
 
         const user = await User.findOne({email})
         console.log(user);
+        const { captchaToken } = req.body;
+
+        const isHuman = await verifyCaptcha(captchaToken);
+
+        if (!isHuman) {
+          return res.status(400).json({ message: "Bot detected" });
+        }
 
         if(!user){
             return res.status(400).json({

@@ -17,12 +17,17 @@ const Login = ({ onLoginSuccess, onSwitchToSignup }) => {
     setError("");
 
     try {
+      const captchaToken = await window.grecaptcha.execute(
+      import.meta.env.VITE_RECAPTCHA_SITE_KEY,
+      { action: "login" }
+      );
+
       const res = await apiFetch("http://localhost:3000/api/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password , }),
       });
 
       const data = await res.json();
