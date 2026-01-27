@@ -20,7 +20,6 @@ connectDB()
     console.log("server not started ")
 })
 
-
 app.get('/',(req,res) =>{
     res.send("<h1>Hello TechStalwarts</h1>");
 });
