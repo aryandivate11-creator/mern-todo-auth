@@ -61,7 +61,7 @@ const Signup = ({ onSwitchToLogin , onLoginSuccess}) => {
       const res = await apiFetch("https://mern-todo-auth-e53g.vercel.app/api/auth/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(...form, captchaToken,),
+        body: JSON.stringify({ email: form.email,phone: form.phone,  password: form.password, captchaToken,}),
       });
 
       const data = await res.json();
