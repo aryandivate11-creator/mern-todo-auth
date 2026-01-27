@@ -20,7 +20,7 @@ const Todos = () => {
   setLoading(true);
 
   const res = await apiFetch(
-    `http://localhost:3000/api/todos?page=${page}&limit=5&search=${search}`
+    `http://13.53.207.171:3000/api/todos?page=${page}&limit=5&search=${search}`
   );
 
   const data = await res.json();
@@ -40,7 +40,7 @@ const Todos = () => {
     e.preventDefault();
     if (!newTitle.trim()) return;
 
-    await apiFetch("http://localhost:3000/api/todos", {
+    await apiFetch("http://13.53.207.171:3000/api/todos", {
       method: "POST",
       body: JSON.stringify({ title: newTitle }),
     });
@@ -51,7 +51,7 @@ const Todos = () => {
 
   // Save Edited Todo
   const saveEdit = async (id) => {
-    await apiFetch(`http://localhost:3000/api/todos/${id}`, {
+    await apiFetch(`http://13.53.207.171:3000/api/todos/${id}`, {
       method: "PUT",
       body: JSON.stringify({ title: editText }),
     });
@@ -63,7 +63,7 @@ const Todos = () => {
 
   // Toggle Status
   const toggleStatus = async (todo) => {
-    await apiFetch(`http://localhost:3000/api/todos/${todo._id}`, {
+    await apiFetch(`http://13.53.207.171:3000/api/todos/${todo._id}`, {
       method: "PUT",
       body: JSON.stringify({ completed: !todo.completed }),
     });
@@ -73,7 +73,7 @@ const Todos = () => {
 
   // Delete Todo
   const deleteTodo = async (id) => {
-    await apiFetch(`http://localhost:3000/api/todos/${id}`, {
+    await apiFetch(`http://13.53.207.171:3000/api/todos/${id}`, {
       method: "DELETE"
     });
 
@@ -83,7 +83,7 @@ const Todos = () => {
   const handleLogout = async () => {
   const refreshToken = localStorage.getItem("refreshToken");
 
-  await apiFetch("http://localhost:3000/api/auth/logout", {
+  await apiFetch("http://13.53.207.171:3000/api/auth/logout", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ refreshToken }),

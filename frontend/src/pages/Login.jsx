@@ -22,12 +22,12 @@ const Login = ({ onLoginSuccess, onSwitchToSignup }) => {
       { action: "login" }
       );
 
-      const res = await apiFetch("http://localhost:3000/api/auth/login", {
+      const res = await apiFetch("http://13.53.207.171:3000/api/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password , }),
+        body: JSON.stringify({ email, password , captchaToken }),
       });
 
       const data = await res.json();
@@ -106,7 +106,7 @@ const Login = ({ onLoginSuccess, onSwitchToSignup }) => {
           <GoogleLogin
             onSuccess={async (response) => {
               try {
-                const res = await apiFetch("http://localhost:3000/api/auth/google", {
+                const res = await apiFetch("http://13.53.207.171:3000/api/auth/google", {
                   method: "POST",
                   headers: {
                     "Content-Type": "application/json",

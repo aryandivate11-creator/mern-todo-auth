@@ -58,7 +58,7 @@ const Signup = ({ onSwitchToLogin , onLoginSuccess}) => {
       { action: "signup" }
     );
 
-      const res = await apiFetch("http://localhost:3000/api/auth/signup", {
+      const res = await apiFetch("http://13.53.207.171:3000/api/auth/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(...form, captchaToken,),
@@ -154,7 +154,7 @@ const Signup = ({ onSwitchToLogin , onLoginSuccess}) => {
           <GoogleLogin
             onSuccess={async (response) => {
               try {
-                const res = await apiFetch("http://localhost:3000/api/auth/google", {
+                const res = await apiFetch("http://13.53.207.171:3000/api/auth/google", {
                   method: "POST",
                   headers: {
                     "Content-Type": "application/json",
