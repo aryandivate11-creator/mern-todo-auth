@@ -58,7 +58,7 @@ const Signup = ({ onSwitchToLogin , onLoginSuccess}) => {
       { action: "signup" }
     );
 
-      const res = await apiFetch("https://mernbackend-aruu.duckdns.org/api/auth/signup", {
+      const res = await apiFetch("https://mern-todo-auth-e53g.vercel.app/api/auth/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(...form, captchaToken,),
@@ -154,7 +154,7 @@ const Signup = ({ onSwitchToLogin , onLoginSuccess}) => {
           <GoogleLogin
             onSuccess={async (response) => {
               try {
-                const res = await apiFetch("https://mernbackend-aruu.duckdns.org/api/auth/google", {
+                const res = await apiFetch("https://mern-todo-auth-e53g.vercel.app/api/auth/google", {
                   method: "POST",
                   headers: {
                     "Content-Type": "application/json",
