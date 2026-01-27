@@ -13,7 +13,7 @@ export const apiFetch = async (url, options = {}) => {
   if (res.status === 401) {
     const refreshToken = localStorage.getItem("refreshToken");
 
-    const refreshRes = await fetch("http://13.53.207.171:3000/api/auth/refresh", {
+    const refreshRes = await fetch("hhttps://mernbackend-aruu.duckdns.org/api/auth/refresh", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ refreshToken }),
