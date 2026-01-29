@@ -1,0 +1,3 @@
+# Secrets
+src/config/google-service-account.json
+.env
