@@ -1,4 +1,5 @@
 import Todo from "../models/Todo.model.js";
+import { appendTodoRow } from "../utils/googleSheets.js";
 
 export const createTodo = async (req,res) =>{
       try {
@@ -6,6 +7,10 @@ export const createTodo = async (req,res) =>{
             title: req.body.title,
             user : req.user.id,
         });
+
+        if (req.user.sheetId) {
+         await appendTodoRow(req.user.sheetId, todo);
+           } 
 
         res.status(201).json(todo)
       } catch (error) {

@@ -28,6 +28,11 @@ const userSchema = new mongoose.Schema(
      type: String,
     },
 
+    sheetId:{
+      type: String,
+      default : null
+    },
+
   },
   {
     timestamps: true,

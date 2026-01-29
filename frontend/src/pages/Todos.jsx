@@ -101,6 +101,12 @@ const Todos = () => {
       <header className="bg-white shadow p-4 flex justify-between items-center">
         <h1 className="text-xl font-bold text-blue-600">My Todos</h1>
         <button
+          onClick={() => window.location.href = "/profile"}
+          className="text-sm bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+        >
+          Profile
+        </button>
+        <button
           onClick={handleLogout}
           className="text-sm bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
         >
