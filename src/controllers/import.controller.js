@@ -1,4 +1,4 @@
-import Todo from "../models/Todo.js";
+import Todo from "../models/Todo.model.js"
 import { parseExcel } from "../utils/excelParser.js";
 
 export const importTodos = async (req, res) => {
