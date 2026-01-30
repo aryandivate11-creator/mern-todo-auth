@@ -18,7 +18,13 @@ app.use(
     })
 )
 
-app.use(express.json());
+app.use((req, res, next) => {
+  if (req.headers["content-type"]?.includes("multipart/form-data")) {
+    return next();
+  }
+  express.json()(req, res, next);
+});
+
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/api/auth',authRoutes);
