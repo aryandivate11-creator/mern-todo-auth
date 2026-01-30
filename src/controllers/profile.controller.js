@@ -34,7 +34,7 @@ export const updateProfile = async (req, res) => {
     const { name, phone } = req.body;
 
     const user = await User.findByIdAndUpdate(
-      req.user.id,
+      req.user._id,
       { name, phone },
       { new: true }
     );
