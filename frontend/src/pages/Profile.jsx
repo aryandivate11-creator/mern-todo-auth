@@ -31,9 +31,9 @@ const Profile = () => {
       <div className="bg-white p-6 rounded-lg shadow w-full max-w-md">
         <h2 className="text-2xl font-bold mb-4">Profile</h2>
 
-        <p><b>Name:</b> {profile.data.name || "Not set"}</p>
-        <p><b>Email:</b> {profile.data.email}</p>
-        <p><b>Phone:</b> {profile.data.phone || "Not set"}</p>
+        <p><b>Name:</b> {profile.name || "Not set"}</p>
+        <p><b>Email:</b> {profile.email}</p>
+        <p><b>Phone:</b> {profile.phone || "Not set"}</p>
 
         <div className="mt-5 border-t pt-4">
           {profile.sheetConnected ? (

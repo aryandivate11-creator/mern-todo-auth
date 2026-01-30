@@ -42,6 +42,7 @@ const Login = ({ onLoginSuccess, onSwitchToSignup }) => {
       localStorage.setItem("refreshToken", data.refreshToken);
 
       onLoginSuccess();
+      window.location.href = "/";
     } catch (err) {
       setError("Server error. Try again.");
     } finally {
@@ -126,7 +127,10 @@ const Login = ({ onLoginSuccess, onSwitchToSignup }) => {
                 localStorage.setItem("accessToken", data.accessToken);
                 localStorage.setItem("refreshToken", data.refreshToken);
 
+               
                 onLoginSuccess();
+                window.location.href = "/";
+
               } catch (error) {
                 console.error("Google login error:", error);
               }
