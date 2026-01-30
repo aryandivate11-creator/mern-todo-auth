@@ -1,21 +1,24 @@
 import Todo from "../models/Todo.model.js"
 import { parseExcel } from "../utils/excelParser.js";
+import fs from "fs";
 
 export const importTodos = async (req, res) => {
   try {
+
+    if (!req.file) {
+      return res.status(400).json({ message: "No file uploaded" });
+    }
+
     const titles = parseExcel(req.file.path);
+
+    fs.unlinkSync(req.file.path);
 
     if (titles.length > 100) {
       return res.status(400).json({ message: "Max 100 rows allowed" });
     }
-    
-    if (!req.file) {
-  return res.status(400).json({ message: "No file uploaded" });
-}
-    // remove duplicates inside file
+
     const uniqueTitles = [...new Set(titles)];
 
-    // check existing todos
     const existing = await Todo.find({
       user: req.user.id,
       title: { $in: uniqueTitles }
