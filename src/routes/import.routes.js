@@ -6,6 +6,6 @@ import { importTodos } from "../controllers/import.controller.js";
 const upload = multer({ dest: "uploads/" });
 const router = express.Router();
 
-router.post("/", authMiddleware, upload.single("file"), importTodos);
+router.post("/", upload.single("file"), authMiddleware, importTodos);
 
 export default router;
