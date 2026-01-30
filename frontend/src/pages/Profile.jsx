@@ -41,6 +41,7 @@ const Profile = () => {
       });
 
       const data = await res.json();
+      console.log(data)
       setProfile(data);
     } catch {
       alert("Failed to save profile");

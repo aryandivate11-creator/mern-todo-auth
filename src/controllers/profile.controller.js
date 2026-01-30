@@ -1,14 +1,25 @@
 import { createSheetForUser } from "../utils/googleSheets.js";
 import User from "../models/User.model.js"
 
-export const getProfile = (req, res) => {
-  res.json({
-    name: req.user.name || "",
-    email: req.user.email,
-    phone: req.user.phone || "",
-    sheetConnected: Boolean(req.user.sheetId),
-    sheetId: req.user.sheetId,
-  });
+export const getProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json({
+      name: user.name || "",
+      email: user.email,
+      phone: user.phone || "",
+      sheetConnected: Boolean(user.sheetId),
+      sheetId: user.sheetId,
+    });
+  } catch (error) {
+    console.error("Profile error:", error);
+    res.status(500).json({ message: "Failed to fetch profile" });
+  }
 };
 
 export const connectSheet = async (req, res) => {
