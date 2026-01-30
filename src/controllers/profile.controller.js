@@ -31,11 +31,16 @@ export const connectSheet = async (req, res) => {
 
 export const updateProfile = async (req, res) => {
   try {
-    const { name, phone } = req.body;
+    // const { name, phone } = req.body;
+
+   const updates = {};
+
+    if (req.body.name !== undefined) updates.name = req.body.name;
+    if (req.body.phone !== undefined) updates.phone = req.body.phone;
 
     const user = await User.findByIdAndUpdate(
-      req.user._id,
-      { name, phone },
+      req.user.id,
+      updates,
       { new: true }
     );
 
