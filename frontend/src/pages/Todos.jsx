@@ -146,8 +146,26 @@ const Todos = () => {
             Add
           </button>
         </form>
+         <div className="mb-4">
+          <input
+            type="file"
+            accept=".xlsx,.xls"
+            onChange={async (e) => {
+              const file = e.target.files[0];
 
-        {/* Todo List */}
+              const formData = new FormData();
+              formData.append("file", file);
+
+              await apiFetch("https://mernbackend-aruu.duckdns.org/api/import", {
+                method: "POST",
+                body: formData
+              });
+
+              fetchTodos();
+            }}
+          />
+        </div>
+                {/* Todo List */}
        {loading ? (
          <div className="text-center py-6">
          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-blue-600 mx-auto"></div>
