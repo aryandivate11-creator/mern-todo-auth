@@ -8,7 +8,10 @@ export const importTodos = async (req, res) => {
     if (titles.length > 100) {
       return res.status(400).json({ message: "Max 100 rows allowed" });
     }
-
+    
+    if (!req.file) {
+  return res.status(400).json({ message: "No file uploaded" });
+}
     // remove duplicates inside file
     const uniqueTitles = [...new Set(titles)];
 
