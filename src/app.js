@@ -1,7 +1,7 @@
 import express from "express";
 import authRoutes from "./routes/auth.routes.js";
 import todoRoutes from "./routes/todo.routes.js";
-import profileRoutes from "./routes/profile.routes.js"
+import profileRoutes from "./routes/profile.routes.js";
 import cors from "cors";
 
 export const app =  express();
