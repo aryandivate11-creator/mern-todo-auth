@@ -129,8 +129,22 @@ const Todos = () => {
             setPage(1);
           }}
         />
+        <button
+        onClick={async () => {
+          const res = await apiFetch("https://mernbackend-aruu.duckdns.org/api/export");
+          const blob = await res.blob();
 
-        {/* Create Todo */}
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = "todos.xlsx";
+          a.click();
+        }}
+        className="bg-green-600 text-white px-4 py-2 rounded mb-4"
+      >
+        Export Todos 📤
+      </button>
+              {/* Create Todo */}
         <form onSubmit={createTodo} className="flex gap-2 mb-6">
           <input
             type="text"
