@@ -1,33 +1,39 @@
 export const apiFetch = async (url, options = {}) => {
   let accessToken = localStorage.getItem("accessToken");
 
+  const headers = {
+    ...(options.headers || {}),
+    Authorization: "Bearer " + accessToken,
+  };
+
+  // ❗ Only set JSON header if body is NOT FormData
+  if (!(options.body instanceof FormData)) {
+    headers["Content-Type"] = "application/json";
+  }
+
   let res = await fetch(url, {
     ...options,
-    headers: {
-      ...options.headers,
-      Authorization: "Bearer " + accessToken,
-      "Content-Type": "application/json",
-    },
+    headers,
   });
 
   if (res.status === 401) {
     const refreshToken = localStorage.getItem("refreshToken");
 
-    const refreshRes = await fetch("hhttps://mernbackend-aruu.duckdns.org/api/auth/refresh", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ refreshToken }),
-    });
+    const refreshRes = await fetch(
+      "https://mernbackend-aruu.duckdns.org/api/auth/refresh", // fixed typo too
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ refreshToken }),
+      }
+    );
 
     const refreshData = await refreshRes.json();
 
     if (refreshRes.ok) {
       localStorage.setItem("accessToken", refreshData.accessToken);
-
-      // Retry original request
       return apiFetch(url, options);
     } else {
-      // Refresh failed → force logout
       localStorage.clear();
       window.location.reload();
     }
