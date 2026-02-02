@@ -6,5 +6,5 @@ export const parseExcel = (filePath) => {
 
   const data = xlsx.utils.sheet_to_json(sheet);
 
-  return data.map(row => row.Title?.trim()).filter(Boolean);
+  return data.map(row => row.title?.trim()).filter(Boolean);
 };

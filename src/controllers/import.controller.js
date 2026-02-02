@@ -11,6 +11,7 @@ export const importTodos = async (req, res) => {
     }
 
     const titles = parseExcel(req.file.path);
+    console.log("TITLES:", titles);
 
     fs.unlinkSync(req.file.path);
 
