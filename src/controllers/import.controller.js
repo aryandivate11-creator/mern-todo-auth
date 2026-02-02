@@ -4,7 +4,8 @@ import fs from "fs";
 
 export const importTodos = async (req, res) => {
   try {
-
+    console.log("REQ FILE:", req.file);
+    console.log("REQ HEADERS:", req.headers["content-type"]);
     if (!req.file) {
       return res.status(400).json({ message: "No file uploaded" });
     }
