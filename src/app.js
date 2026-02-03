@@ -1,11 +1,11 @@
 import express from "express";
+import cors from "cors";
 import authRoutes from "./routes/auth.routes.js";
 import todoRoutes from "./routes/todo.routes.js";
 import profileRoutes from "./routes/profile.routes.js";
 import importRoutes from "./routes/import.routes.js";
 import exportRoutes from "./routes/export.routes.js";
-import path from "path";
-import cors from "cors";
+
 
 export const app =  express();
 
