@@ -124,7 +124,6 @@ const Profile = () => {
 
                 const res = await apiFetch("https://mernbackend-aruu.duckdns.org/api/profile", {
                 method: "PUT",
-                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ name, phone })
               });
 
