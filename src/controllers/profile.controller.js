@@ -21,7 +21,7 @@ export const updateProfile = async (req, res) => {
     }
 
     const user = await User.findByIdAndUpdate(
-      req.user.id,
+      req.user._id,
       { name, phone },
       { new: true }
     );
@@ -47,7 +47,7 @@ export const uploadProfilePic = async (req, res) => {
     }
 
     const user = await User.findByIdAndUpdate(
-      req.user.id,
+      req.user._id,
       { profilePic: `/uploads/${req.file.filename}` },
       { new: true }
     );
