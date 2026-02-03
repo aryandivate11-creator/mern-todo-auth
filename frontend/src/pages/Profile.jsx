@@ -122,13 +122,16 @@ const Profile = () => {
                   return;
                 }
 
-                await apiFetch("https://mernbackend-aruu.duckdns.org/api/profile", {
-                  method: "PUT",
-                  body: JSON.stringify(form)
-                });
+                const res = await apiFetch("https://mernbackend-aruu.duckdns.org/api/profile", {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ name, phone })
+              });
 
-                setEditing(false);
-                fetchProfile();
+              const data = await res.json();
+
+              setProfile(data);   // 👈 THIS IS THE FIX
+              setEditing(false);
               }}
               className="bg-green-600 text-white px-4 py-2 rounded"
             >
