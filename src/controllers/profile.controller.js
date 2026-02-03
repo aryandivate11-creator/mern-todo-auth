@@ -12,25 +12,20 @@ export const updateProfile = async (req, res) => {
   try {
     const { name, phone } = req.body;
 
-    if (!name || name.length < 2) {
-      return res.status(400).json({ message: "Name too short" });
-    }
-
-    if (phone && phone.length < 8) {
-      return res.status(400).json({ message: "Invalid phone" });
-    }
-
     const user = await User.findByIdAndUpdate(
       req.user._id,
-      { name, phone },
-      { new: true }
+      {
+        name: name || "",
+        phone: phone || ""
+      },
+      { new: true, runValidators: true }
     );
 
     res.json({
       name: user.name,
-      email: user.email,
       phone: user.phone,
-      profilePic: user.profilePic || null
+      email: user.email,
+      profilePic: user.profilePic
     });
 
   } catch (err) {

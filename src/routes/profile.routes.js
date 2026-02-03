@@ -1,11 +1,12 @@
 import express from "express";
 import authMiddleware from "../middlewares/auth.middleware.js";
-import multer from "multer";
+import multer from "multer"
 import {
   getProfile,
   updateProfile,
   uploadProfilePic
 } from "../controllers/profile.controller.js";
+import path from "path";
 
 const storage = multer.diskStorage({
   destination: "uploads/",
