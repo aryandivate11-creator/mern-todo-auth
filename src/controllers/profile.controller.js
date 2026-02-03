@@ -1,10 +1,12 @@
 import User from "../models/User.model.js";
-export const getProfile = (req, res) => {
+export const getProfile = async (req, res) => {
+  const user = await User.findById(req.user.id);
+
   res.json({
-    name: req.user.name || "",
-    email: req.user.email,
-    phone: req.user.phone || "",
-    profilePic: req.user.profilePic || ""
+    name: user.name || "",
+    phone: user.phone || "",
+    email: user.email,
+    profilePic: user.profilePic || ""
   });
 };
 
