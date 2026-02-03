@@ -1,139 +1,100 @@
 import { useEffect, useState } from "react";
-import { apiFetch } from "../utils/api.js";
-import { GoogleLogin } from "@react-oauth/google";
+import { apiFetch } from "../utils/api";
 
 const Profile = () => {
   const [profile, setProfile] = useState(null);
-
+  const [editing, setEditing] = useState(false);
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
 
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const [error, setError] = useState("");
-
   const fetchProfile = async () => {
-    try {
-      const res = await apiFetch("https://mernbackend-aruu.duckdns.org/api/profile");
-      const data = await res.json();
+    const res = await apiFetch("https://mernbackend-aruu.duckdns.org/api/profile");
+    const data = await res.json();
 
-      setProfile(data);
-      setName(data.name || "");
-      setPhone(data.phone || "");
-    } catch {
-      setError("Failed to load profile");
-    } finally {
-      setLoading(false);
-    }
+    setProfile(data);
+    setName(data.name || "");
+    setPhone(data.phone || "");
   };
 
   useEffect(() => {
     fetchProfile();
   }, []);
 
-  const saveProfile = async () => {
-    try {
-      setSaving(true);
+  if (!profile) return <p className="text-center mt-10">Loading...</p>;
 
-      const res = await apiFetch("https://mernbackend-aruu.duckdns.org/api/profile", {
-        method: "PUT",
-        body: JSON.stringify({ name, phone }),
-      });
-
-      const data = await res.json();
-      console.log(data)
-      setProfile(data);
-    } catch {
-      alert("Failed to save profile");
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  if (loading) return <p className="text-center mt-10">Loading profile...</p>;
-  if (error) return <p className="text-center mt-10 text-red-500">{error}</p>;
+  const initial = profile.name ? profile.name[0].toUpperCase() : "?";
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-      <div className="bg-white p-6 rounded-lg shadow w-full max-w-md space-y-3">
+    <div className="min-h-screen bg-gray-100 flex justify-center items-center">
+      <div className="bg-white p-6 rounded-lg shadow w-full max-w-md">
 
-        <h2 className="text-2xl font-bold mb-2">Profile</h2>
+        {/* Avatar */}
+        <div className="flex justify-center mb-4 relative">
+          {profile.profilePic ? (
+            <img
+              src={`https://mernbackend-aruu.duckdns.org${profile.profilePic}`}
+              className="w-24 h-24 rounded-full object-cover"
+            />
+          ) : (
+            <div className="w-24 h-24 rounded-full bg-blue-600 text-white flex items-center justify-center text-3xl font-bold">
+              {initial}
+            </div>
+          )}
+        </div>
 
-        {/* Editable name */}
-        <div>
-          <label className="text-sm font-medium">Name</label>
+        {/* Editable Fields */}
+        <div className="space-y-3">
+
           <input
-            className="w-full border p-2 rounded mt-1"
+            className="w-full border p-2 rounded"
+            placeholder="Enter name"
             value={name}
             onChange={(e) => setName(e.target.value)}
+            disabled={!editing}
           />
-        </div>
 
-        {/* Editable phone */}
-        <div>
-          <label className="text-sm font-medium">Phone</label>
           <input
-            className="w-full border p-2 rounded mt-1"
+            className="w-full border p-2 rounded"
+            placeholder="Enter phone"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
+            disabled={!editing}
           />
+
+          <input
+            className="w-full border p-2 rounded bg-gray-100"
+            value={profile.email}
+            disabled
+          />
+
         </div>
 
-        <p className="text-sm text-gray-600">
-          Email: <b>{profile.email}</b>
-        </p>
+        {/* Buttons */}
+        <div className="mt-5 flex justify-between">
 
-        <button
-          onClick={saveProfile}
-          disabled={saving}
-          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
-        >
-          {saving ? "Saving..." : "Save Profile"}
-        </button>
-
-        <div className="mt-5 border-t pt-4">
-
-          {profile.sheetConnected ? (
-            <>
-              <p className="text-green-600 font-semibold">
-                Spreadsheet connected ✅
-              </p>
-
-              <a
-                href={`https://docs.google.com/spreadsheets/d/${profile.sheetId}`}
-                target="_blank"
-                className="text-blue-600 underline block mt-2"
-              >
-                Open Sheet
-              </a>
-
-              <p className="text-sm text-gray-500 mt-1">
-                You can reconnect anytime
-              </p>
-            </>
+          {!editing ? (
+            <button
+              onClick={() => setEditing(true)}
+              className="bg-blue-600 text-white px-4 py-2 rounded"
+            >
+              Edit ✏️
+            </button>
           ) : (
-            <p className="text-red-600 font-semibold">
-              No spreadsheet connected ❌
-            </p>
-          )}
-
-          <div className="mt-4 flex justify-center">
-            <GoogleLogin
-              onSuccess={async (res) => {
-                await apiFetch(
-                  "https://mernbackend-aruu.duckdns.org/api/profile/connect-sheet",
-                  {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ accessToken: res.access_token }),
-                  }
-                );
-
+            <button
+              onClick={async () => {
+                await apiFetch("https://mernbackend-aruu.duckdns.org/api/profile", {
+                  method: "PUT",
+                  body: JSON.stringify({ name, phone })
+                });
+                setEditing(false);
                 fetchProfile();
               }}
-              onError={() => alert("Google authorization failed")}
-            />
-          </div>
+              className="bg-green-600 text-white px-4 py-2 rounded"
+            >
+              Save 💾
+            </button>
+          )}
+
         </div>
       </div>
     </div>
