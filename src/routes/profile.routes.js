@@ -1,11 +1,22 @@
 import express from "express";
 import authMiddleware from "../middlewares/auth.middleware.js";
 import { uploadProfile } from "../middlewares/upload.middleware.js";
+import multer from "multer";
 import {
   getProfile,
   updateProfile,
   uploadProfilePic
 } from "../controllers/profile.controller.js";
+
+const storage = multer.diskStorage({
+  destination: "uploads/",
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname));
+  }
+});
+
+ const upload = multer({ storage });
+
 
 const router = express.Router();
 
@@ -15,7 +26,7 @@ router.put("/", authMiddleware, updateProfile);
 router.post(
   "/upload-photo",
   authMiddleware,
-  uploadProfile.single("photo"),
+  upload.single("photo"),
   uploadProfilePic
 );
 

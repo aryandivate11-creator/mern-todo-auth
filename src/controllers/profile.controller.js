@@ -1,3 +1,4 @@
+import User from "../models/User.model.js";
 export const getProfile = (req, res) => {
   res.json({
     name: req.user.name || "",
@@ -11,22 +12,33 @@ export const updateProfile = async (req, res) => {
   try {
     const { name, phone } = req.body;
 
-    if (name !== undefined) req.user.name = name;
-    if (phone !== undefined) req.user.phone = phone;
+    if (!name || name.length < 2) {
+      return res.status(400).json({ message: "Name too short" });
+    }
 
-    await req.user.save();
+    if (phone && phone.length < 8) {
+      return res.status(400).json({ message: "Invalid phone" });
+    }
+
+    const user = await User.findByIdAndUpdate(
+      req.user.id,
+      { name, phone },
+      { new: true }
+    );
 
     res.json({
-      name: req.user.name,
-      email: req.user.email,
-      phone: req.user.phone,
-      profilePic: req.user.profilePic || ""
+      name: user.name,
+      email: user.email,
+      phone: user.phone,
+      profilePic: user.profilePic || null
     });
-  } catch (error) {
-    console.error(error);
+
+  } catch (err) {
+    console.error("PROFILE UPDATE ERROR:", err);
     res.status(500).json({ message: "Profile update failed" });
   }
 };
+
 
 export const uploadProfilePic = async (req, res) => {
   try {
@@ -34,17 +46,17 @@ export const uploadProfilePic = async (req, res) => {
       return res.status(400).json({ message: "No image uploaded" });
     }
 
-    req.user.profilePic = `/uploads/profile/${req.file.filename}`;
+    const user = await User.findByIdAndUpdate(
+      req.user.id,
+      { profilePic: `/uploads/${req.file.filename}` },
+      { new: true }
+    );
 
-    await req.user.save();
-
-    res.json({
-      message: "Profile picture updated",
-      profilePic: req.user.profilePic
-    });
+    res.json({ profilePic: user.profilePic });
 
   } catch (err) {
-    console.error(err);
+    console.error("PHOTO UPLOAD ERROR:", err);
     res.status(500).json({ message: "Upload failed" });
   }
 };
+
