@@ -10,16 +10,18 @@ export const getProfile = (req, res) => {
 
 export const updateProfile = async (req, res) => {
   try {
-    const { name, phone } = req.body;
+    const name = req.body.name || "";
+    const phone = req.body.phone || "";
 
     const user = await User.findByIdAndUpdate(
       req.user.id,
-      {
-        name: name || "",
-        phone: phone || ""
-      },
-      { new: true, runValidators: true }
+      { name, phone },
+      { new: true }
     );
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
 
     res.json({
       name: user.name,
@@ -30,7 +32,7 @@ export const updateProfile = async (req, res) => {
 
   } catch (err) {
     console.error("PROFILE UPDATE ERROR:", err);
-    res.status(500).json({ message: "Profile update failed" });
+    res.status(500).json({ error: err.message });
   }
 };
 
@@ -47,11 +49,15 @@ export const uploadProfilePic = async (req, res) => {
       { new: true }
     );
 
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
     res.json({ profilePic: user.profilePic });
 
   } catch (err) {
     console.error("PHOTO UPLOAD ERROR:", err);
-    res.status(500).json({ message: "Upload failed" });
+    res.status(500).json({ error: err.message });
   }
 };
 
