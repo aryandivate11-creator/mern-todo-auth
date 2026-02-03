@@ -13,7 +13,7 @@ export const updateProfile = async (req, res) => {
     const { name, phone } = req.body;
 
     const user = await User.findByIdAndUpdate(
-      req.user._id,
+      req.user.id,
       {
         name: name || "",
         phone: phone || ""
@@ -42,7 +42,7 @@ export const uploadProfilePic = async (req, res) => {
     }
 
     const user = await User.findByIdAndUpdate(
-      req.user._id,
+      req.user.id,
       { profilePic: `/uploads/${req.file.filename}` },
       { new: true }
     );
