@@ -27,3 +27,24 @@ export const updateProfile = async (req, res) => {
     res.status(500).json({ message: "Profile update failed" });
   }
 };
+
+export const uploadProfilePic = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ message: "No image uploaded" });
+    }
+
+    req.user.profilePic = `/uploads/profile/${req.file.filename}`;
+
+    await req.user.save();
+
+    res.json({
+      message: "Profile picture updated",
+      profilePic: req.user.profilePic
+    });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Upload failed" });
+  }
+};
