@@ -1,17 +1,29 @@
-import User from "../models/User.model.js"
+export const getProfile = (req, res) => {
+  res.json({
+    name: req.user.name || "",
+    email: req.user.email,
+    phone: req.user.phone || "",
+    profilePic: req.user.profilePic || ""
+  });
+};
 
 export const updateProfile = async (req, res) => {
-  const { name, phone } = req.body;
+  try {
+    const { name, phone } = req.body;
 
-  req.user.name = name || req.user.name;
-  req.user.phone = phone || req.user.phone;
+    if (name !== undefined) req.user.name = name;
+    if (phone !== undefined) req.user.phone = phone;
 
-  await req.user.save();
+    await req.user.save();
 
-  res.json({
-    name: req.user.name,
-    phone: req.user.phone,
-    email: req.user.email,
-    profilePic: req.user.profilePic
-  });
+    res.json({
+      name: req.user.name,
+      email: req.user.email,
+      phone: req.user.phone,
+      profilePic: req.user.profilePic || ""
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Profile update failed" });
+  }
 };
