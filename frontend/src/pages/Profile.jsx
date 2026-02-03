@@ -47,16 +47,16 @@ const Profile = () => {
          {preview || profile.profilePic ? (
             <img
              src={preview || `https://mernbackend-aruu.duckdns.org${profile.profilePic}`}
-              className="w-24 h-24 rounded-full object-cover"
+              className="w-24 h-24 rounded-full object-cover border-4 border-blue-500"
             />
           ) : (
-            <div className="w-24 h-24 rounded-full bg-blue-600 text-white flex items-center justify-center text-3xl font-bold">
+            <div  className="w-24 h-24 rounded-full bg-blue-600 border-4 border-blue-500 text-white flex items-center justify-center text-3xl font-bold">
               {initial}
             </div>
           )}
 
           {/* Upload */}
-          <label className="absolute bottom-1 right-[40%] bg-white p-2 rounded-full shadow cursor-pointer">
+         <label className="absolute bottom-1 right-1 bg-white p-1.5 rounded-full shadow border cursor-pointer hover:bg-gray-100">
             ✏️
             <input
               type="file"
