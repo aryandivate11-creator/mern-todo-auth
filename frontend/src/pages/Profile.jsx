@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 const Profile = () => {
   const navigate = useNavigate();
 
+  const [preview, setPreview] = useState(null);
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(false);
@@ -43,9 +44,9 @@ const Profile = () => {
 
         {/* Avatar */}
         <div className="flex justify-center mb-4 relative">
-          {profile.profilePic ? (
+         {preview || profile.profilePic ? (
             <img
-              src={`https://mernbackend-aruu.duckdns.org${profile.profilePic}`}
+             src={preview || `https://mernbackend-aruu.duckdns.org${profile.profilePic}`}
               className="w-24 h-24 rounded-full object-cover"
             />
           ) : (
@@ -62,16 +63,17 @@ const Profile = () => {
               hidden
               accept="image/*"
               onChange={async (e) => {
-                const fd = new FormData();
-                fd.append("photo", e.target.files[0]);
+              const file = e.target.files[0];
+            setPreview(URL.createObjectURL(file)); // instant preview
+            const fd = new FormData();
+            fd.append("photo", file);
+            await apiFetch("https://mernbackend-aruu.duckdns.org/api/profile/upload-photo", {
+              method: "POST",
+              body: fd
+            });
 
-                await apiFetch("https://mernbackend-aruu.duckdns.org/api/profile/upload-photo", {
-                  method: "POST",
-                  body: fd
-                });
-
-                fetchProfile();
-              }}
+            fetchProfile();
+          }}
             />
           </label>
         </div>
@@ -124,8 +126,11 @@ const Profile = () => {
 
                 const res = await apiFetch("https://mernbackend-aruu.duckdns.org/api/profile", {
                 method: "PUT",
-                body: JSON.stringify({ form})
-              });
+                body: JSON.stringify({
+                  name: form.name,
+                  phone: form.phone
+                })
+           });
 
               const data = await res.json();
 
