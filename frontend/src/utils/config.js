@@ -1,1 +1,1 @@
-export const API_URL = "https://mernbackend-aruu.duckdns.org"
+export const API_URL = import.meta.env.VITE_API_URL
