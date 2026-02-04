@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { GoogleLogin } from "@react-oauth/google";
 import { apiFetch } from "../utils/api";
+import { API_URL } from "../utils/config";
 
 const Signup = ({ onSwitchToLogin , onLoginSuccess}) => {
   const [form, setForm] = useState({
@@ -58,7 +59,7 @@ const Signup = ({ onSwitchToLogin , onLoginSuccess}) => {
       { action: "signup" }
     );
 
-      const res = await apiFetch("https://mernbackend-aruu.duckdns.org/api/auth/signup", {
+      const res = await apiFetch(`${API_URL}/api/auth/signup`, {
         method: "POST",
         body: JSON.stringify({ email: form.email, phone:form.phone, password: form.password, captchaToken,}),
       });
@@ -153,7 +154,7 @@ const Signup = ({ onSwitchToLogin , onLoginSuccess}) => {
           <GoogleLogin
             onSuccess={async (response) => {
               try {
-                const res = await apiFetch("https://mernbackend-aruu.duckdns.org/api/auth/google", {
+                const res = await apiFetch(`${API_URL}/api/auth/google`, {
                   method: "POST",
                   headers: {
                     "Content-Type": "application/json",

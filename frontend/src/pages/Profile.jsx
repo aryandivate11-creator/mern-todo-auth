@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { apiFetch } from "../utils/api";
 import { useNavigate } from "react-router-dom";
+import { API_URL } from "../utils/config";
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -15,7 +16,7 @@ const Profile = () => {
   const fetchProfile = async () => {
     setLoading(true);
     try {
-      const res = await apiFetch("https://mernbackend-aruu.duckdns.org/api/profile");
+      const res = await apiFetch(`${API_URL}/api/profile`);
       const data = await res.json();
       setProfile(data);
       setForm({ name: data.name || "", phone: data.phone || "" });
@@ -46,7 +47,7 @@ const Profile = () => {
         <div className="flex justify-center mb-4 relative">
          {preview || profile.profilePic ? (
             <img
-             src={preview || `https://mernbackend-aruu.duckdns.org${profile.profilePic}`}
+             src={preview || `${API_URL}${profile.profilePic}`}
               className="w-24 h-24 rounded-full object-cover border-4 border-blue-500"
             />
           ) : (
@@ -67,7 +68,7 @@ const Profile = () => {
             setPreview(URL.createObjectURL(file)); // instant preview
             const fd = new FormData();
             fd.append("photo", file);
-            await apiFetch("https://mernbackend-aruu.duckdns.org/api/profile/upload-photo", {
+            await apiFetch(`${API_URL}/api/profile/upload-photo`, {
               method: "POST",
               body: fd
             });
@@ -124,7 +125,7 @@ const Profile = () => {
                   return;
                 }
 
-                const res = await apiFetch("https://mernbackend-aruu.duckdns.org/api/profile", {
+                const res = await apiFetch(`${API_URL}/api/profile`, {
                 method: "PUT",
                 body: JSON.stringify({
                   name: form.name,

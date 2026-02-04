@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { apiFetch } from "../utils/api";
+import { API_URL } from "../utils/config";
 
 const Todos = () => {
   const [todos, setTodos] = useState([]);
@@ -20,7 +21,7 @@ const Todos = () => {
   setLoading(true);
 
   const res = await apiFetch(
-    `https://mernbackend-aruu.duckdns.org/api/todos?page=${page}&limit=5&search=${search}`
+    `${API_URL}/api/todos?page=${page}&limit=5&search=${search}`
   );
 
   const data = await res.json();
@@ -40,7 +41,7 @@ const Todos = () => {
     e.preventDefault();
     if (!newTitle.trim()) return;
 
-    await apiFetch("https://mernbackend-aruu.duckdns.org/api/todos", {
+    await apiFetch(`${API_URL}/api/todos`, {
       method: "POST",
       body: JSON.stringify({ title: newTitle }),
     });
@@ -51,7 +52,7 @@ const Todos = () => {
 
   // Save Edited Todo
   const saveEdit = async (id) => {
-    await apiFetch(`https://mernbackend-aruu.duckdns.org/api/todos/${id}`, {
+    await apiFetch(`${API_URL}/api/todos/${id}`, {
       method: "PUT",
       body: JSON.stringify({ title: editText }),
     });
@@ -63,7 +64,7 @@ const Todos = () => {
 
   // Toggle Status
   const toggleStatus = async (todo) => {
-    await apiFetch(`https://mernbackend-aruu.duckdns.org/api/todos/${todo._id}`, {
+    await apiFetch(`${API_URL}/api/todos/${todo._id}`, {
       method: "PUT",
       body: JSON.stringify({ completed: !todo.completed }),
     });
@@ -73,7 +74,7 @@ const Todos = () => {
 
   // Delete Todo
   const deleteTodo = async (id) => {
-    await apiFetch(`https://mernbackend-aruu.duckdns.org/api/todos/${id}`, {
+    await apiFetch(`${API_URL}/api/todos/${id}`, {
       method: "DELETE"
     });
 
@@ -83,7 +84,7 @@ const Todos = () => {
   const handleLogout = async () => {
   const refreshToken = localStorage.getItem("refreshToken");
 
-  await apiFetch("https://mernbackend-aruu.duckdns.org/api/auth/logout", {
+  await apiFetch(`${API_URL}g/api/auth/logout`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ refreshToken }),
@@ -131,7 +132,7 @@ const Todos = () => {
         />
         <button
         onClick={async () => {
-          const res = await apiFetch("https://mernbackend-aruu.duckdns.org/api/export");
+          const res = await apiFetch(`${API_URL}/api/export`);
           const blob = await res.blob();
 
           const url = window.URL.createObjectURL(blob);
@@ -170,7 +171,7 @@ const Todos = () => {
               const formData = new FormData();
               formData.append("file", file);
 
-              await apiFetch("https://mernbackend-aruu.duckdns.org/api/import", {
+              await apiFetch(`${API_URL}/api/import`, {
                 method: "POST",
                 body: formData
               });
