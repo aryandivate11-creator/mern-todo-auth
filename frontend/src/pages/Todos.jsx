@@ -84,7 +84,7 @@ const Todos = () => {
   const handleLogout = async () => {
   const refreshToken = localStorage.getItem("refreshToken");
 
-  await apiFetch(`${API_URL}g/api/auth/logout`, {
+  await apiFetch(`${API_URL}/api/auth/logout`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ refreshToken }),
