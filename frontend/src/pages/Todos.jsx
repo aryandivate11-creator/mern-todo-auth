@@ -103,7 +103,7 @@ const Todos = () => {
         <h1 className="text-xl font-bold text-blue-600">My Todos</h1>
         <div className="flex gap-3">
           <button
-            onClick={() => navigate("/ai")}
+            onClick={() => window.location.href = "/ai"}
             className="text-sm bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700"
           >
             AI Copilot 🤖
