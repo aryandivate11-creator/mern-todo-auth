@@ -28,6 +28,7 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Todos from "./pages/Todos";
 import Profile from "./pages/Profile";
+import AICopilot from "./pages/AICopilot";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(
@@ -71,6 +72,8 @@ function App() {
         />
 
         <Route path="*" element={<Navigate to="/" />} />
+
+        <Route path="/ai" element={<AICopilot />} />
       </Routes>
     </BrowserRouter>
   );
