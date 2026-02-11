@@ -1,4 +1,5 @@
 import express from "express";
+import { startAIListener } from "./services/aiListener.service.js";
 import authRoutes from "./routes/auth.routes.js";
 import connectDB from "./config/db.js";
 import {app} from "./app.js";
@@ -14,6 +15,7 @@ connectDB()
 .then(() =>{
     app.listen(PORT,"0.0.0.0", () =>{
     console.log(`Server is running on http://localhost:${PORT}`);
+    // startAIListener();
 })
 })
 .catch((error) =>{

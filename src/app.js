@@ -5,6 +5,7 @@ import todoRoutes from "./routes/todo.routes.js";
 import profileRoutes from "./routes/profile.routes.js";
 import importRoutes from "./routes/import.routes.js";
 import exportRoutes from "./routes/export.routes.js";
+import aiRoutes from "./routes/ai.routes.js";
 
 
 export const app =  express();
@@ -40,5 +41,7 @@ app.use("/api/profile", profileRoutes);
 app.use("/api/import", importRoutes);
 
 app.use("/api/export", exportRoutes);
+
+app.use("/api/ai", aiRoutes);
 
 app.use("/uploads", express.static("uploads"));

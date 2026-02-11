@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { collection, addDoc, onSnapshot, orderBy, query, serverTimestamp } from "firebase/firestore";
 import { db } from "../utils/firebase";
+import { apiFetch } from "../utils/api";
 
 const AICopilot = () => {
   const [input, setInput] = useState("");
@@ -23,20 +24,18 @@ const AICopilot = () => {
   }, []);
 
   // ✍️ SEND MESSAGE
-  const sendMessage = async () => {
-    if (!input.trim()) return;
+ const sendMessage = async () => {
+  console.log("Sending:", input);
+  if (!input.trim()) return;
 
-    await addDoc(
-      collection(db, "aiChats", CHAT_ID, "messages"),
-      {
-        role: "user",
-        text: input,
-        createdAt: serverTimestamp()
-      }
-    );
+  const res = await apiFetch("http://localhost:3000/api/ai/chat", {
+       method: "POST",
+    body: JSON.stringify({ message: input })
+  });
 
-    setInput("");
-  };
+  setInput("");
+};
+
 
   return (
     <div className="p-6 max-w-2xl mx-auto">
