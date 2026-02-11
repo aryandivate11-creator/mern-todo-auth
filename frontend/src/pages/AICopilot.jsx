@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { collection, addDoc, onSnapshot, orderBy, query, serverTimestamp } from "firebase/firestore";
 import { db } from "../utils/firebase";
 import { apiFetch } from "../utils/api";
+import { API_URL } from "../utils/config";
 
 const AICopilot = () => {
   const [input, setInput] = useState("");
@@ -28,7 +29,7 @@ const AICopilot = () => {
   console.log("Sending:", input);
   if (!input.trim()) return;
 
-  const res = await apiFetch("http://localhost:3000/api/ai/chat", {
+  const res = await apiFetch(`${API_URL}/api/ai/chat`, {
        method: "POST",
     body: JSON.stringify({ message: input })
   });
